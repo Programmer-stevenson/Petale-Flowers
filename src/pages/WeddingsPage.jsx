@@ -142,50 +142,50 @@ const WeddingsPage = () => {
   return (
     <div className="min-h-screen bg-cream pt-20">
       {/* Hero Section */}
-      <section className="relative h-[80vh] overflow-hidden">
-        <div className="absolute inset-[-20%]">
+      <section className="relative min-h-[100svh] overflow-hidden">
+        <div className="absolute inset-0">
           <img
-            src="/groom.jpg"
+            src="/marriage.jpg"
             alt="Wedding flowers"
-            className="w-full h-full object-cover object-center scale-[0.7]"
+            className="w-full h-full object-cover object-center scale-90"
           />
-          <div className="absolute inset-[-20%] bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-primary/30 to-transparent" />
         </div>
-        <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 h-full flex items-center py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="max-w-2xl"
+              className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left"
             >
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 mb-4 md:mb-6">
                 <Heart size={16} className="text-accent" fill="currentColor" />
-                <span className="text-white font-medium">Wedding Floristry</span>
+                <span className="text-white font-medium text-sm md:text-base">Wedding Floristry</span>
               </span>
-              <h1 className="text-5xl md:text-7xl font-serif text-white leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif text-white leading-tight mb-4 md:mb-6">
                 Your Dream Wedding,{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent">
                   In Bloom
                 </span>
               </h1>
-              <p className="text-xl text-white/80 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 leading-relaxed mt-5">
                 From intimate elopements to grand celebrations, we create bespoke floral designs 
                 that capture your love story and transform your vision into reality.
               </p>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex justify-center lg:justify-start gap-3">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-secondary text-primary font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center gap-2 group"
+                  className="px-4 py-2.5 sm:px-8 sm:py-4 bg-secondary text-primary font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-sm sm:text-base"
                 >
                   Book Consultation
-                  <Calendar size={18} />
+                  <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/20 transition-all"
+                  className="px-4 py-2.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/20 transition-all text-sm sm:text-base"
                 >
                   View Gallery
                 </motion.button>
@@ -193,17 +193,6 @@ const WeddingsPage = () => {
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <div className="w-6 h-10 rounded-full border-2 border-white/50 flex items-start justify-center p-2">
-            <div className="w-1.5 h-3 rounded-full bg-white/80" />
-          </div>
-        </motion.div>
       </section>
 
       {/* Services Section */}

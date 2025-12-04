@@ -66,7 +66,7 @@ export const Navbar = () => {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-3xl">🌸</span>
+              <img src="/favicon.png" alt="" className="object-contain" style={{ height: '100px', width: '100px' }} />
               <span className={`text-2xl font-serif font-bold transition-colors ${
                 isScrolled || !isHomePage ? 'text-primary' : 'text-white'
               }`}>
@@ -165,9 +165,7 @@ export const Navbar = () => {
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className={`relative p-2 rounded-full transition-colors ${
-                    isScrolled || !isHomePage ? 'text-primary hover:bg-cream' : 'text-white/90 hover:bg-white/10'
-                  }`}
+                  className="relative p-2 rounded-full transition-colors text-primary hover:bg-cream/20"
                 >
                   <ShoppingBag size={20} />
                   {cartCount > 0 && (

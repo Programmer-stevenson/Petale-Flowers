@@ -58,11 +58,11 @@ const ContactPage = () => {
       <section className="relative h-80 bg-primary overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=600&fit=crop"
+            src="/long.jpg"
             alt="Flower shop"
-            className="w-full h-full object-cover opacity-30"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/40 via-primary/30 to-primary/20" />
         </div>
         <div className="relative z-10 h-full flex items-center justify-center text-center px-4">
           <div>
