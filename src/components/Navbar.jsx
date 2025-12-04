@@ -26,7 +26,7 @@ export const Navbar = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Shop', path: '/shop', hasDropdown: true, dropdownType: 'shop' },
-    { name: 'Occasions', path: '/occasions', hasDropdown: true, dropdownType: 'occasions' },
+    { name: 'Weddings', path: '/weddings' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
@@ -43,19 +43,11 @@ export const Navbar = () => {
     { name: 'Mixed Bouquets', path: '/shop/mixed' },
   ];
 
-  const occasionCategories = [
-    { name: 'All Occasions', path: '/occasions' },
-    { name: 'Wedding', path: '/weddings' },
-    { name: 'Anniversary', path: '/occasions/anniversary' },
-    { name: 'Other', path: '/occasions/other' },
-  ];
-
   const isHomePage = location.pathname === '/';
   const isActive = (path) => path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
   const getDropdownItems = (type) => {
     if (type === 'shop') return shopCategories;
-    if (type === 'occasions') return occasionCategories;
     return [];
   };
 
@@ -240,24 +232,6 @@ export const Navbar = () => {
                   </h3>
                   <div className="space-y-2">
                     {shopCategories.map((cat) => (
-                      <Link 
-                        key={cat.name} 
-                        to={cat.path} 
-                        className="block py-2 text-primary hover:text-secondary transition-colors"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mobile Occasion Categories */}
-                <div className="mt-8">
-                  <h3 className="text-sm font-bold text-primary/60 uppercase tracking-wider mb-4">
-                    Shop by Occasion
-                  </h3>
-                  <div className="space-y-2">
-                    {occasionCategories.map((cat) => (
                       <Link 
                         key={cat.name} 
                         to={cat.path} 

@@ -258,13 +258,6 @@ const ProductCard = ({ product, viewMode, onTap }) => {
           </Link>
         </motion.div>
 
-        {/* Mobile Tap Hint */}
-        <div className="absolute bottom-3 left-3 right-3 lg:hidden">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg py-2 text-center">
-            <span className="text-[10px] text-primary/70 font-medium">Tap to quick view</span>
-          </div>
-        </div>
-
         {/* Add to Cart - Desktop Only */}
         <motion.div
           className="absolute bottom-0 left-0 right-0 p-3 hidden lg:block"
