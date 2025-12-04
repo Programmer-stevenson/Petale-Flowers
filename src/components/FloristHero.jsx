@@ -13,7 +13,8 @@ import {
   Star,
   Check,
   Plus,
-  Minus
+  Minus,
+  X
 } from 'lucide-react';
 
 // ============================================
@@ -83,12 +84,169 @@ const bouquetProducts = [
 ];
 
 // ============================================
+// PRODUCT QUICK VIEW MODAL (Mobile Double Tap)
+// ============================================
+const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, onWishlist, isWishlisted }) => {
+  const [quantity, setQuantity] = useState(1);
+  const [isAdding, setIsAdding] = useState(false);
+
+  if (!isOpen || !product) return null;
+
+  const handleAddToCart = () => {
+    setIsAdding(true);
+    onAddToCart(product, quantity);
+    setTimeout(() => {
+      setIsAdding(false);
+      onClose();
+    }, 1500);
+  };
+
+  const discount = product.originalPrice 
+    ? Math.round((1 - product.price / product.originalPrice) * 100) 
+    : null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:hidden"
+        onClick={onClose}
+      >
+        {/* Backdrop */}
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+        
+        {/* Modal Content */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          className="relative w-[253px] bg-white rounded-2xl overflow-hidden shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-black/30 flex items-center justify-center text-white"
+          >
+            <X size={14} />
+          </button>
+
+          {/* Product Image */}
+          <div className="relative aspect-square bg-gradient-to-br from-cream to-cream-dark">
+            <img
+              src={product.img}
+              alt={product.name}
+              className="w-full h-full object-cover"
+            />
+            
+            {/* Tag */}
+            <div className="absolute top-2.5 left-2.5">
+              <span className="px-2 py-1 text-[8px] font-bold uppercase bg-primary text-white rounded-full">
+                {product.tag}
+              </span>
+            </div>
+
+            {/* Discount Badge */}
+            {discount && (
+              <div className="absolute top-8 left-2.5">
+                <span className="px-2 py-1 text-[8px] font-bold bg-accent text-primary rounded-full">
+                  -{discount}%
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Product Details */}
+          <div className="p-3.5">
+            {/* Name */}
+            <h3 className="font-serif text-sm text-primary mb-1 leading-tight">
+              {product.name}
+            </h3>
+
+            {/* Price */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg font-bold text-primary">
+                ${product.price}
+              </span>
+              {product.originalPrice && (
+                <span className="text-xs text-primary/40 line-through">
+                  ${product.originalPrice}
+                </span>
+              )}
+            </div>
+
+            {/* Quantity Row */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center bg-cream rounded-full">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-7 h-7 flex items-center justify-center text-primary"
+                >
+                  <Minus size={12} />
+                </button>
+                <span className="w-6 text-center font-bold text-primary text-xs">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-7 h-7 flex items-center justify-center text-primary"
+                >
+                  <Plus size={12} />
+                </button>
+              </div>
+              <span className="text-sm font-bold text-primary">${(product.price * quantity).toFixed(2)}</span>
+            </div>
+
+            {/* Buttons */}
+            <div className="space-y-2">
+              <button
+                onClick={handleAddToCart}
+                disabled={isAdding}
+                className={`w-full py-2.5 rounded-xl font-semibold text-[9px] uppercase flex items-center justify-center gap-1.5 ${
+                  isAdding ? 'bg-sage text-white' : 'bg-primary text-white'
+                }`}
+              >
+                {isAdding ? (
+                  <>
+                    <Check size={12} />
+                    Added!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag size={12} />
+                    Add to Cart
+                  </>
+                )}
+              </button>
+
+              <Link to="/shop" className="block">
+                <button className="w-full py-2.5 rounded-xl font-semibold text-[9px] uppercase flex items-center justify-center gap-1.5 bg-cream text-primary">
+                  View in Shop
+                  <ArrowRight size={12} />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// ============================================
 // PRODUCT CARD COMPONENT
 // ============================================
-const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPriceOverlay = false }) => {
+const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPriceOverlay = false, onTap }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+
+  const handleTap = () => {
+    if (onTap) {
+      onTap(product);
+    }
+  };
 
   const handleAddToCart = () => {
     setIsAdding(true);
@@ -105,6 +263,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
       className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-700 h-full flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleTap}
     >
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-cream-dark">
@@ -298,6 +457,18 @@ const ProductCarousel = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleTap = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   // Auto-advance carousel
   useEffect(() => {
@@ -392,6 +563,7 @@ const ProductCarousel = ({ products }) => {
 
       {/* Mobile: 2-Column Grid */}
       <div className="lg:hidden flex-1 overflow-y-auto pb-4">
+        <p className="text-center text-xs text-primary/50 mb-3">Tap to quick view</p>
         <div className="grid grid-cols-2 gap-2 md:gap-3">
           {products.map((product) => (
             <ProductCard
@@ -401,10 +573,21 @@ const ProductCarousel = ({ products }) => {
               onWishlist={handleWishlist}
               isWishlisted={wishlist.includes(product.id)}
               showPriceOverlay={false}
+              onTap={handleTap}
             />
           ))}
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <ProductQuickViewModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onAddToCart={handleAddToCart}
+        onWishlist={handleWishlist}
+        isWishlisted={selectedProduct ? wishlist.includes(selectedProduct.id) : false}
+      />
 
       {/* Pagination Dots - Desktop Only */}
       <div className="hidden lg:flex items-center justify-center gap-2 mt-6">
