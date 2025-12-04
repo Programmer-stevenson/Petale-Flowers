@@ -393,7 +393,7 @@ const ProductCarousel = ({ products }) => {
       {/* Mobile: 2-Column Grid */}
       <div className="lg:hidden flex-1 overflow-y-auto pb-4">
         <div className="grid grid-cols-2 gap-2 md:gap-3">
-          {products.slice(0, 4).map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -552,8 +552,8 @@ const FloristHero = () => {
           </div>
         </div>
 
-        {/* ===== PRODUCT CAROUSEL (30% on desktop, hidden on mobile) ===== */}
-        <div className="hidden lg:flex w-full lg:w-[30%] bg-gradient-to-br from-cream via-white to-cream-dark p-4 md:p-5 lg:p-6 flex-col justify-center">
+        {/* ===== PRODUCT CAROUSEL (30% on desktop, full width on mobile) ===== */}
+        <div className="w-full lg:w-[30%] bg-gradient-to-br from-cream via-white to-cream-dark p-4 md:p-5 lg:p-6 flex flex-col justify-center">
           <ProductCarousel products={bouquetProducts} />
         </div>
       </div>
