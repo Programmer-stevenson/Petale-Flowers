@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -455,10 +456,11 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
 // ============================================
 const ProductCarousel = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Use the real cart context
+  const { addToCart, toggleWishlist, isInWishlist } = useCart();
 
   const handleTap = (product) => {
     setSelectedProduct(product);
@@ -482,15 +484,11 @@ const ProductCarousel = ({ products }) => {
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
 
   const handleAddToCart = (product, quantity) => {
-    setCart(prev => [...prev, { ...product, quantity }]);
+    addToCart(product, quantity);
   };
 
   const handleWishlist = (productId) => {
-    setWishlist(prev => 
-      prev.includes(productId) 
-        ? prev.filter(id => id !== productId)
-        : [...prev, productId]
-    );
+    toggleWishlist(productId);
   };
 
   return (
@@ -554,7 +552,7 @@ const ProductCarousel = ({ products }) => {
               product={products[currentIndex]}
               onAddToCart={handleAddToCart}
               onWishlist={handleWishlist}
-              isWishlisted={wishlist.includes(products[currentIndex].id)}
+              isWishlisted={isInWishlist(products[currentIndex].id)}
               showPriceOverlay={true}
             />
           </motion.div>
@@ -571,7 +569,7 @@ const ProductCarousel = ({ products }) => {
               product={product}
               onAddToCart={handleAddToCart}
               onWishlist={handleWishlist}
-              isWishlisted={wishlist.includes(product.id)}
+              isWishlisted={isInWishlist(product.id)}
               showPriceOverlay={false}
               onTap={handleTap}
             />
@@ -586,7 +584,7 @@ const ProductCarousel = ({ products }) => {
         onClose={closeModal}
         onAddToCart={handleAddToCart}
         onWishlist={handleWishlist}
-        isWishlisted={selectedProduct ? wishlist.includes(selectedProduct.id) : false}
+        isWishlisted={selectedProduct ? isInWishlist(selectedProduct.id) : false}
       />
 
       {/* Pagination Dots - Desktop Only */}
