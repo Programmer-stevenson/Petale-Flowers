@@ -23,25 +23,25 @@ const WeddingsPage = () => {
       icon: Flower2,
       title: 'Bridal Bouquets',
       description: 'Stunning hand-tied bouquets crafted to complement your gown and personal style.',
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop'
+      image: '/groom.jpg'
     },
     {
       icon: Sparkles,
       title: 'Ceremony Decor',
       description: 'Transform your venue with breathtaking arches, aisle markers, and altar arrangements.',
-      image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&h=400&fit=crop'
+      image: '/decor.jpg'
     },
     {
       icon: Users,
       title: 'Reception Florals',
       description: 'Elegant centerpieces and table arrangements that create unforgettable ambiance.',
-      image: 'https://images.unsplash.c81-b80fe463b330?w=600&h=400&fit=crop'
+      image: '/recept.jpg'
     },
     {
       icon: Camera,
       title: 'Photo Installations',
       description: 'Instagram-worthy flower walls and photo backdrops for memorable moments.',
-      image: 'https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?w=600&h=400&fit=crop'
+      image: '/install.jpg'
     },
   ];
 
@@ -143,13 +143,13 @@ const WeddingsPage = () => {
     <div className="min-h-screen bg-cream pt-20">
       {/* Hero Section */}
       <section className="relative h-[80vh] overflow-hidden">
-        <div className="absolute inset-0">
+        <div className="absolute inset-[-20%]">
           <img
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1600&h=1000&fit=crop"
+            src="/groom.jpg"
             alt="Wedding flowers"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center scale-[0.7]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
+          <div className="absolute inset-[-20%] bg-gradient-to-r from-primary/90 via-primary/70 to-primary/40" />
         </div>
         <div className="relative z-10 h-full flex items-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -242,11 +242,11 @@ const WeddingsPage = () => {
                 viewport={{ once: true }}
                 className="group relative overflow-hidden rounded-3xl bg-cream"
               >
-                <div className="aspect-[16/10] overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent" />
                 </div>
