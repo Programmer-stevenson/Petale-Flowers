@@ -4,7 +4,7 @@
 
 export const products = [
   // ========== ROSES (8) ==========
-  { id: 1, name: "Bear Rose Harmony", price: 99.99, originalPrice: 119.99, img: "/bear-rose.jpg", tag: "Bestseller", category: "roses", rating: 4.9, reviews: 124, description: "A stunning arrangement of premium red & pink roses, hand-tied with eucalyptus and a teddy companion.", details: ["12 Premium Red Roses", "Fresh Eucalyptus", "Satin Ribbon"], inStock: true },
+  { id: 1, name: "Bear Rose Harmony", price: 99.99, originalPrice: null, img: "/bear-rose.jpg", tag: "Bestseller", category: "roses", rating: 4.9, reviews: 124, description: "A stunning arrangement of premium red & pink roses, hand-tied with eucalyptus and a teddy companion.", details: ["12 Premium Red Roses", "Fresh Eucalyptus", "Satin Ribbon"], inStock: true },
   { id: 2, name: "Romantic Mint Garden", price: 99.99, originalPrice: 109.99, img: "/mint-roses.jpg", tag: "Premium", category: "roses", rating: 5.0, reviews: 203, description: "Abundant garden roses in romantic pink tones.", details: ["24 Garden Roses", "Premium Vase"], inStock: true },
   { id: 3, name: "Yellow & Pink Roses", price: 51.99, originalPrice: null, img: "/pink-yellow-roses.jpg", tag: "Popular", category: "roses", rating: 4.7, reviews: 89, description: "Delicate blush pink roses for a soft romantic touch.", details: ["18 Blush Roses", "Baby's Breath"], inStock: true },
   { id: 4, name: "Classic Red Dozen", price: 69.99, originalPrice: 79.99, img: "/roses.jpg", tag: "Classic", category: "roses", rating: 4.8, reviews: 312, description: "The timeless gesture of love - one dozen red roses.", details: ["12 Long-Stem Roses", "Glass Vase"], inStock: true },
