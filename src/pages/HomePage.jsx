@@ -97,6 +97,107 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Featured Bouquets Section - Desktop */}
+      <section className="hidden lg:block py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-2 text-xs font-bold uppercase tracking-widest bg-secondary/20 text-secondary rounded-full mb-4"
+            >
+              Shop Collection
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-4xl font-serif text-primary"
+            >
+              Featured Bouquets
+            </motion.h2>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { id: 1, name: "Rose Harmony", price: 45, originalPrice: 55, img: "/roses.jpg", tag: "Bestseller", rating: 4.9, reviews: 124 },
+              { id: 2, name: "Sunset Orchid Mix", price: 62, originalPrice: null, img: "/orange-bouqet.jpg", tag: "Premium", rating: 5.0, reviews: 89 },
+              { id: 3, name: "Peony Bliss", price: 55, originalPrice: 70, img: "/orange-tropic.jpg", tag: "Seasonal", rating: 4.8, reviews: 156 },
+              { id: 4, name: "Lavender Garden", price: 38, originalPrice: null, img: "/dark-lavender.jpg", tag: "Popular", rating: 4.7, reviews: 203 },
+              { id: 5, name: "Elegant Lily Cascade", price: 72, originalPrice: 85, img: "/delight-jar.jpg", tag: "Luxury", rating: 4.9, reviews: 67 },
+              { id: 6, name: "Spring Tulip Bundle", price: 42, originalPrice: null, img: "/lavendar-snow.jpg", tag: "Fresh", rating: 4.6, reviews: 98 },
+            ].map((product, idx) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Link to={`/product/${product.id}`} className="group block">
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-500">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream to-cream-dark">
+                      <img
+                        src={product.img}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-primary text-white rounded-full">
+                          {product.tag}
+                        </span>
+                      </div>
+                      {product.originalPrice && (
+                        <div className="absolute top-4 right-4">
+                          <span className="px-2.5 py-1.5 text-[10px] font-bold bg-accent text-primary rounded-full">
+                            -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-0.5">
+                          {[...Array(5)].map((_, i) => (
+                            <Star 
+                              key={i} 
+                              size={12} 
+                              className={i < Math.floor(product.rating) ? 'text-secondary fill-secondary' : 'text-cream-dark fill-cream-dark'} 
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-primary/60">{product.rating} ({product.reviews})</span>
+                      </div>
+                      <h3 className="font-serif text-xl text-primary mb-2 group-hover:text-secondary transition-colors">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-primary">${product.price}</span>
+                        {product.originalPrice && (
+                          <span className="text-sm text-primary/40 line-through">${product.originalPrice}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              to="/shop"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-semibold hover:bg-primary-light transition-colors group"
+            >
+              View All Products
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* About Preview Section */}
       <section className="py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
