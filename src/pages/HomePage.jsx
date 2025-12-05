@@ -122,12 +122,12 @@ const HomePage = () => {
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { id: 1, name: "Rose Harmony", price: 45, originalPrice: 55, img: "/roses.jpg", tag: "Bestseller", rating: 4.9, reviews: 124 },
-              { id: 2, name: "Sunset Orchid Mix", price: 62, originalPrice: null, img: "/orange-bouqet.jpg", tag: "Premium", rating: 5.0, reviews: 89 },
-              { id: 3, name: "Peony Bliss", price: 55, originalPrice: 70, img: "/orange-tropic.jpg", tag: "Seasonal", rating: 4.8, reviews: 156 },
-              { id: 4, name: "Lavender Garden", price: 38, originalPrice: null, img: "/dark-lavender.jpg", tag: "Popular", rating: 4.7, reviews: 203 },
-              { id: 5, name: "Elegant Lily Cascade", price: 72, originalPrice: 85, img: "/delight-jar.jpg", tag: "Luxury", rating: 4.9, reviews: 67 },
-              { id: 6, name: "Spring Tulip Bundle", price: 42, originalPrice: null, img: "/lavendar-snow.jpg", tag: "Fresh", rating: 4.6, reviews: 98 },
+              { id: 1, name: "Rose Harmony", price: 44.99, originalPrice: 54.99, img: "/roses.jpg", tag: "Bestseller", rating: 4.9, reviews: 124 },
+              { id: 2, name: "Sunset Orchid Mix", price: 61.99, originalPrice: null, img: "/orange-bouqet.jpg", tag: "Premium", rating: 5.0, reviews: 89 },
+              { id: 3, name: "Peony Bliss", price: 54.99, originalPrice: 69.99, img: "/orange-tropic.jpg", tag: "Seasonal", rating: 4.8, reviews: 156 },
+              { id: 4, name: "Lavender Garden", price: 37.99, originalPrice: null, img: "/dark-lavender.jpg", tag: "Popular", rating: 4.7, reviews: 203 },
+              { id: 5, name: "Elegant Lily Cascade", price: 71.99, originalPrice: 84.99, img: "/delight-jar.jpg", tag: "Luxury", rating: 4.9, reviews: 67 },
+              { id: 6, name: "Spring Tulip Bundle", price: 41.99, originalPrice: null, img: "/lavendar-snow.jpg", tag: "Fresh", rating: 4.6, reviews: 98 },
             ].map((product, idx) => (
               <motion.div
                 key={product.id}
