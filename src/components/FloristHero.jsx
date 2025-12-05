@@ -249,7 +249,8 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
     }
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
     setIsAdding(true);
     onAddToCart(product, quantity);
     setTimeout(() => setIsAdding(false), 1500);
@@ -334,7 +335,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
           <motion.button
             whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => onWishlist(product.id)}
+            onClick={(e) => { e.stopPropagation(); onWishlist(product.id); }}
             className={`w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-all duration-300 ${
               isWishlisted 
                 ? 'bg-accent text-primary' 
@@ -346,6 +347,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
           <motion.button
             whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
+            onClick={(e) => e.stopPropagation()}
             className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-white/80 flex items-center justify-center shadow-lg backdrop-blur-sm text-primary hover:bg-secondary hover:text-white transition-all duration-300"
           >
             <Eye size={12} className="md:w-3.5 md:h-3.5" />
@@ -364,7 +366,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
             <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                onClick={(e) => { e.stopPropagation(); setQuantity(Math.max(1, quantity - 1)); }}
                 className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-primary hover:bg-cream transition-colors"
               >
                 <Minus size={12} className="md:w-3.5 md:h-3.5" />
@@ -372,7 +374,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
               <span className="w-6 md:w-8 text-center font-bold text-primary text-xs md:text-sm">{quantity}</span>
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setQuantity(quantity + 1)}
+                onClick={(e) => { e.stopPropagation(); setQuantity(quantity + 1); }}
                 className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-primary hover:bg-cream transition-colors"
               >
                 <Plus size={12} className="md:w-3.5 md:h-3.5" />
@@ -458,6 +460,7 @@ const ProductCarousel = ({ products }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resetTimer, setResetTimer] = useState(0);
   
   // Use the real cart context
   const { addToCart, toggleWishlist, isInWishlist } = useCart();
@@ -472,16 +475,28 @@ const ProductCarousel = ({ products }) => {
     setSelectedProduct(null);
   };
 
-  // Auto-advance carousel
+  // Auto-advance carousel - resets when resetTimer changes
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % products.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [products.length]);
+  }, [products.length, resetTimer]);
 
-  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % products.length);
-  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % products.length);
+    setResetTimer((prev) => prev + 1);
+  };
+  
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
+    setResetTimer((prev) => prev + 1);
+  };
+
+  const goToSlide = (idx) => {
+    setCurrentIndex(idx);
+    setResetTimer((prev) => prev + 1);
+  };
 
   const handleAddToCart = (product, quantity) => {
     addToCart(product, quantity);
@@ -494,44 +509,22 @@ const ProductCarousel = ({ products }) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 md:mb-6">
-        <div>
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-2.5 py-1 md:px-3 md:py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-secondary/20 text-secondary rounded-full mb-1.5 md:mb-2"
-          >
-            Shop Collection
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl md:text-2xl font-serif text-primary"
-          >
-            Featured Bouquets
-          </motion.h2>
-        </div>
-
-        {/* Navigation - Desktop Only */}
-        <div className="hidden lg:flex items-center gap-2">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={prevSlide}
-            className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-500 border border-cream-dark"
-          >
-            <ChevronLeft size={18} />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={nextSlide}
-            className="w-10 h-10 rounded-full bg-primary shadow-md flex items-center justify-center text-white hover:bg-primary-light transition-all duration-500"
-          >
-            <ChevronRight size={18} />
-          </motion.button>
-        </div>
+      <div className="text-center mb-4 md:mb-6">
+        <motion.span 
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 0, y: 0 }}
+  className="inline-block px-2.5 py-1 md:px-3 md:py-1.5 text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-transparent text-transparent rounded-full mb-1.5 md:mb-2"
+>
+  Shop Collection
+</motion.span>
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-xl md:text-2xl font-serif text-primary"
+        >
+          Featured Bouquets
+        </motion.h2>
       </div>
 
       {/* Desktop: Single Card Slideshow - Elegant Crossfade */}
@@ -592,7 +585,7 @@ const ProductCarousel = ({ products }) => {
         {products.map((_, idx) => (
           <motion.button
             key={idx}
-            onClick={() => setCurrentIndex(idx)}
+            onClick={() => goToSlide(idx)}
             className={`rounded-full transition-all duration-500 ${
               idx === currentIndex 
                 ? 'w-8 h-2.5 bg-gradient-to-r from-primary to-sage' 
@@ -739,20 +732,29 @@ const FloristHero = () => {
         </div>
       </div>
 
-      {/* Floating Cart Indicator (Mobile) */}
+      {/* Floating Cart & Wishlist Icons (Mobile) */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-        className="fixed bottom-6 right-6 z-50 lg:hidden"
+        className="fixed top-24 right-4 z-50 lg:hidden flex flex-col gap-3"
       >
         <Link to="/cart">
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center"
+            className="w-11 h-11 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center"
           >
-            <ShoppingBag size={20} className="md:w-6 md:h-6" />
+            <ShoppingBag size={18} />
+          </motion.div>
+        </Link>
+        <Link to="/wishlist">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="w-11 h-11 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center"
+          >
+            <Heart size={18} />
           </motion.div>
         </Link>
       </motion.div>

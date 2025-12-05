@@ -66,10 +66,10 @@ const HomePage = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { name: 'Roses', img: '/roses-luxe.jpg', path: '/shop/roses' },
-              { name: 'Peonies', img: '/luxe-peony.jpg', path: '/shop/peonies' },
-              { name: 'Orchids', img: '/luxe-orchid.jpg', path: '/shop/orchids' },
-              { name: 'Mixed', img: '/luxe-mixed.jpg', path: '/shop/mixed' },
+              { name: 'Roses', img: '/rose-hero.jpg', path: '/shop/roses' },
+              { name: 'Peonies', img: '/hero-peony.jpg', path: '/shop/peonies' },
+              { name: 'Orchids', img: '/orchid-hero.jpg', path: '/shop/orchids' },
+              { name: 'Mixed', img: '/mixed-hero.jpg', path: '/shop/mixed' },
             ].map((cat, idx) => (
               <motion.div
                 key={cat.name}
@@ -105,7 +105,7 @@ const HomePage = () => {
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative order-2 lg:order-1"
             >
               <div className="aspect-[4/5] rounded-3xl overflow-hidden">
                 <img
@@ -114,13 +114,22 @@ const HomePage = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-             
+              <div className="mt-8">
+                <Link
+                  to="/about"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-semibold hover:bg-primary-light transition-colors group"
+                >
+                  Learn More About Us
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
+              className="order-1 lg:order-2"
             >
               <span className="inline-block px-4 py-2 text-xs font-bold uppercase tracking-widest bg-accent/20 text-accent rounded-full mb-4">
                 Our Story
@@ -131,16 +140,9 @@ const HomePage = () => {
               <p className="text-lg text-primary/70 mb-6 leading-relaxed">
                 At Pétale, we believe every bouquet tells a story. Our master florists combine artistic vision with botanical expertise to create arrangements that capture emotions and celebrate life's precious moments.
               </p>
-              <p className="text-lg text-primary/70 mb-8 leading-relaxed">
+              <p className="text-lg text-primary/70 leading-relaxed">
                 From locally sourced blooms to sustainable practices, we're committed to bringing you the finest flowers while caring for our planet.
               </p>
-              <Link
-                to="/about"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-semibold hover:bg-primary-light transition-colors group"
-              >
-                Learn More About Us
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
             </motion.div>
           </div>
         </div>

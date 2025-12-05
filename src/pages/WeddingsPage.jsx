@@ -145,7 +145,7 @@ const WeddingsPage = () => {
       <section className="relative min-h-[100svh] overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="/marriage.jpg"
+            src="/wedding.jpg"
             alt="Wedding flowers"
             className="w-full h-full object-cover object-center scale-90"
           />
@@ -169,11 +169,11 @@ const WeddingsPage = () => {
                   In Bloom
                 </span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 leading-relaxed mt-5">
+              <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 leading-relaxed mt-[70px] sm:mt-5">
                 From intimate elopements to grand celebrations, we create bespoke floral designs 
                 that capture your love story and transform your vision into reality.
               </p>
-              <div className="flex justify-center lg:justify-start gap-3">
+              <div className="flex justify-center lg:justify-start gap-3 mt-[50px] sm:mt-0">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

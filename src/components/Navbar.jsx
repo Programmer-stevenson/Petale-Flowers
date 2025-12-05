@@ -62,7 +62,7 @@ export const Navbar = () => {
             : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
@@ -137,20 +137,16 @@ export const Navbar = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsSearchOpen(true)}
-                className={`p-2 rounded-full transition-colors ${
-                  isScrolled || !isHomePage ? 'text-primary hover:bg-cream' : 'text-white/90 hover:bg-white/10'
-                }`}
+                className="p-2 rounded-full transition-colors text-primary hover:bg-cream"
               >
                 <Search size={20} />
               </motion.button>
 
-              <Link to="/shop">
+              <Link to="/wishlist">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className={`relative p-2 rounded-full transition-colors ${
-                    isScrolled || !isHomePage ? 'text-primary hover:bg-cream' : 'text-white/90 hover:bg-white/10'
-                  }`}
+                  className="relative p-2 rounded-full transition-colors text-primary hover:bg-cream"
                 >
                   <Heart size={20} />
                   {wishlist.length > 0 && (
@@ -165,7 +161,7 @@ export const Navbar = () => {
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="relative p-2 rounded-full transition-colors text-primary hover:bg-cream/20"
+                  className="relative p-2 rounded-full transition-colors text-primary hover:bg-cream"
                 >
                   <ShoppingBag size={20} />
                   {cartCount > 0 && (
