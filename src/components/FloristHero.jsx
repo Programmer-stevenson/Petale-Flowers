@@ -81,15 +81,30 @@ const bouquetProducts = [
   },
 ];
 
+// Hardened against older iOS Safari / in-app webviews (Instagram, TikTok, FB)
+// where MediaQueryList.addEventListener is undefined. Falling back to the
+// legacy addListener API prevents the effect from throwing and white-screening
+// the entire app on mobile.
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return undefined;
+    }
+
     const media = window.matchMedia('(max-width: 1023px)');
     const onChange = () => setIsMobile(media.matches);
     onChange();
-    media.addEventListener('change', onChange);
-    return () => media.removeEventListener('change', onChange);
+
+    if (typeof media.addEventListener === 'function') {
+      media.addEventListener('change', onChange);
+      return () => media.removeEventListener('change', onChange);
+    }
+
+    // Legacy fallback (Safari < 14, older Android webviews)
+    media.addListener(onChange);
+    return () => media.removeListener(onChange);
   }, []);
 
   return isMobile;
@@ -104,6 +119,16 @@ const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, isWishli
     setQuantity(1);
     setIsAdding(false);
   }, [product?.id, isOpen]);
+
+  // Lock body scroll while the modal is open so the page behind doesn't scroll on mobile.
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   if (!isOpen || !product) return null;
 
@@ -136,15 +161,15 @@ const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, isWishli
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={shouldReduceMotion ? undefined : { opacity: 0, scale: 0.98, y: 8 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
-          className="relative w-[253px] bg-white rounded-2xl overflow-hidden shadow-2xl"
+          className="relative w-full max-w-[320px] bg-white rounded-2xl overflow-hidden shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             onClick={onClose}
-            className="absolute top-2.5 right-2.5 z-10 w-7 h-7 rounded-full bg-black/30 flex items-center justify-center text-white"
+            className="absolute top-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-black/30 flex items-center justify-center text-white"
             aria-label="Close quick view"
           >
-            <X size={14} />
+            <X size={16} />
           </button>
 
           <div className="relative aspect-square bg-gradient-to-br from-cream to-cream-dark">
@@ -157,19 +182,19 @@ const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, isWishli
             />
 
             <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5">
-              <span className="px-2 py-1 text-[8px] font-bold uppercase bg-primary text-white rounded-full">
+              <span className="px-2 py-1 text-[9px] font-bold uppercase bg-primary text-white rounded-full">
                 {product.tag}
               </span>
               {discount && (
-                <span className="px-2 py-1 text-[8px] font-bold bg-accent text-primary rounded-full">
+                <span className="px-2 py-1 text-[9px] font-bold bg-accent text-primary rounded-full">
                   -{discount}%
                 </span>
               )}
             </div>
           </div>
 
-          <div className="p-3.5">
-            <h3 className="font-serif text-sm text-primary mb-1 leading-tight">{product.name}</h3>
+          <div className="p-4">
+            <h3 className="font-serif text-base text-primary mb-1 leading-tight">{product.name}</h3>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-lg font-bold text-primary">${product.price}</span>
               {product.originalPrice && (
@@ -180,12 +205,20 @@ const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, isWishli
 
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center bg-cream rounded-full">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 flex items-center justify-center text-primary">
-                  <Minus size={12} />
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-9 h-9 flex items-center justify-center text-primary"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus size={14} />
                 </button>
-                <span className="w-6 text-center font-bold text-primary text-xs">{quantity}</span>
-                <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 flex items-center justify-center text-primary">
-                  <Plus size={12} />
+                <span className="w-7 text-center font-bold text-primary text-sm">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-9 h-9 flex items-center justify-center text-primary"
+                  aria-label="Increase quantity"
+                >
+                  <Plus size={14} />
                 </button>
               </div>
               <span className="text-sm font-bold text-primary">${(product.price * quantity).toFixed(2)}</span>
@@ -195,27 +228,27 @@ const ProductQuickViewModal = ({ product, isOpen, onClose, onAddToCart, isWishli
               <button
                 onClick={handleAddToCart}
                 disabled={isAdding}
-                className={`w-full py-2.5 rounded-xl font-semibold text-[9px] uppercase flex items-center justify-center gap-1.5 ${
+                className={`w-full py-3 rounded-xl font-semibold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 ${
                   isAdding ? 'bg-sage text-white' : 'bg-primary text-white'
                 }`}
               >
                 {isAdding ? (
                   <>
-                    <Check size={12} />
+                    <Check size={14} />
                     Added!
                   </>
                 ) : (
                   <>
-                    <ShoppingBag size={12} />
+                    <ShoppingBag size={14} />
                     Add to Cart
                   </>
                 )}
               </button>
 
               <Link to={`/product/${product.id}`} className="block">
-                <button className="w-full py-2.5 rounded-xl font-semibold text-[9px] uppercase flex items-center justify-center gap-1.5 bg-cream text-primary">
+                <button className="w-full py-3 rounded-xl font-semibold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1.5 bg-cream text-primary">
                   View Details
-                  <ArrowRight size={12} />
+                  <ArrowRight size={14} />
                 </button>
               </Link>
             </div>
@@ -265,7 +298,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
           className="w-full h-full object-cover"
           loading={priority ? 'eager' : 'lazy'}
           decoding="async"
-          fetchPriority={priority ? 'high' : 'auto'}
+          fetchpriority={priority ? 'high' : 'auto'}
         />
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
@@ -337,6 +370,7 @@ const ProductCard = ({ product, onAddToCart, onWishlist, isWishlisted, showPrice
             initial={false}
             animate={{ opacity: interactionActive ? 1 : 0, y: interactionActive ? 0 : 20 }}
             transition={{ duration: shouldReduceMotion ? 0 : 0.25 }}
+            style={{ pointerEvents: interactionActive ? 'auto' : 'none' }}
           >
             <div className="flex items-center justify-between mb-2 md:mb-3">
               <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
@@ -513,11 +547,14 @@ const FloristHero = () => {
 
   return (
     <section className="relative min-h-[100svh] lg:h-screen overflow-hidden bg-cream">
-      <div className="absolute top-20 right-1/3 w-[500px] h-[500px] bg-sage rounded-full blur-[200px] opacity-20 pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-accent rounded-full blur-[150px] opacity-15 pointer-events-none" />
+      {/* Heavy blur orbs are expensive on mobile GPUs; only render them from md up. */}
+      <div className="hidden md:block absolute top-20 right-1/3 w-[500px] h-[500px] bg-sage rounded-full blur-[140px] opacity-20 pointer-events-none" />
+      <div className="hidden md:block absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-accent rounded-full blur-[120px] opacity-15 pointer-events-none" />
 
       <div className="flex flex-col lg:flex-row h-full">
-        <div className="relative w-full lg:w-[70%] h-[100vh] lg:h-full">
+        {/* svh instead of vh so the mobile address bar doesn't crop/jump the hero.
+            ~80svh leaves the featured bouquets peeking above the fold to cue scrolling. */}
+        <div className="relative w-full lg:w-[70%] h-[80svh] min-h-[480px] lg:h-full lg:min-h-0">
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=1200&h=1600&fit=crop&auto=format&q=75"
@@ -525,7 +562,7 @@ const FloristHero = () => {
               className="w-full h-full object-cover"
               loading="eager"
               decoding="async"
-              fetchPriority="high"
+              fetchpriority="high"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-primary/85 via-primary/50 to-primary/20 lg:to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-primary/20" />
@@ -537,11 +574,11 @@ const FloristHero = () => {
                 initial={shouldReduceMotion ? false : { opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.05 }}
-                className="mb-5"
+                className="mb-4 sm:mb-5"
               >
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/15 backdrop-blur-md rounded-full border border-white/20">
                   <Sparkles size={14} className="text-secondary" />
-                  <span className="text-white/90 text-sm font-medium">Artisan Crafted Since 2010</span>
+                  <span className="text-white/90 text-xs sm:text-sm font-medium">Artisan Crafted Since 2010</span>
                 </span>
               </motion.div>
 
@@ -549,7 +586,7 @@ const FloristHero = () => {
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.55, delay: shouldReduceMotion ? 0 : 0.12 }}
-                className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-white leading-[1.1] mb-[35px] sm:mb-5 md:mb-6"
+                className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-serif text-white leading-[1.1] mb-4 sm:mb-5 md:mb-6"
               >
                 Fresh Blooms,
                 <br />
@@ -560,7 +597,7 @@ const FloristHero = () => {
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.18 }}
-                className="text-base md:text-lg lg:text-xl text-white/80 mb-10 leading-relaxed max-w-md lg:max-w-xl mx-auto lg:mx-0 mt-[60px] sm:mt-0"
+                className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 mb-8 sm:mb-10 leading-relaxed max-w-md lg:max-w-xl mx-auto lg:mx-0"
               >
                 Handcrafted bouquets delivered same-day across the city.
                 Each arrangement tells a unique story of elegance and natural beauty.
@@ -570,17 +607,17 @@ const FloristHero = () => {
                 initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : 0.24 }}
-                className="flex flex-row justify-center lg:justify-start gap-4 mt-2"
+                className="flex flex-row justify-center lg:justify-start gap-3 sm:gap-4"
               >
-                <Link to="/shop">
-                  <button className="group px-6 py-3.5 md:px-8 md:py-4 bg-secondary text-primary font-semibold rounded-full shadow-xl shadow-secondary/30 hover:shadow-2xl hover:bg-secondary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap">
+                <Link to="/shop" className="flex-1 sm:flex-none">
+                  <button className="group w-full px-5 py-3.5 md:px-8 md:py-4 bg-secondary text-primary font-semibold rounded-full shadow-xl shadow-secondary/30 hover:shadow-2xl hover:bg-secondary/90 transition-all duration-300 flex items-center justify-center gap-2 text-sm md:text-base whitespace-nowrap">
                     Shop Bouquets
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
                   </button>
                 </Link>
 
-                <Link to="/weddings">
-                  <button className="px-6 py-3.5 md:px-8 md:py-4 bg-white/10 backdrop-blur-md text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/20 transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+                <Link to="/weddings" className="flex-1 sm:flex-none">
+                  <button className="w-full px-5 py-3.5 md:px-8 md:py-4 bg-white/10 backdrop-blur-md text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white/20 transition-all duration-300 text-sm md:text-base whitespace-nowrap">
                     Weddings
                   </button>
                 </Link>
