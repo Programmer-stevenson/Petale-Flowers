@@ -24,29 +24,8 @@ A beautiful, fully-featured florist e-commerce website built with React, Framer 
 | Cream | `#f9f7f4` | Backgrounds |
 | Cream Dark | `#ede9e4` | Borders, cards |
 
-## 🚀 Quick Start
 
-### 1. Install dependencies
-```bash
-npm install
-```
 
-### 2. Add your product images
-Place these images in the `/public` folder:
-- `orange-bouqet.jpg`
-- `dark-lavender.jpg`
-- `delight-jar.jpg`
-- `lavendar-snow.jpg`
-
-### 3. Start development server
-```bash
-npm run dev
-```
-
-### 4. Build for production
-```bash
-npm run build
-```
 
 ## 📁 Project Structure
 
